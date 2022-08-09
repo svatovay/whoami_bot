@@ -59,10 +59,10 @@ if __name__ == '__main__':
     start_handler = CommandHandler('start', start)
     create_room_handler = CommandHandler('create_room', create_room)
     # entrance_room_handler = CommandHandler('entrance_room', entrance_room)
-    entrance_dialog_handler = ConversationHandler(entry_points=[CommandHandler('entrance_room', entrance_room)])
+    # entrance_dialog_handler = ConversationHandler(entry_points=[CommandHandler('entrance_room', entrance_room)])
 
     application.add_handler(start_handler)
     application.add_handler(create_room_handler)
-    application.add_handler(entrance_dialog_handler)
+    # application.add_handler(entrance_dialog_handler)
 
     application.run_polling()
