@@ -135,9 +135,6 @@ if __name__ == '__main__':
 
     application = ApplicationBuilder().token(token).build()
 
-    # start_handler = CommandHandler('start', start)
-    # create_room_handler = CommandHandler('create_room', create_room)
-    # entrance_room_handler = CommandHandler('entrance_room', entrance_room)
     start_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
@@ -150,7 +147,5 @@ if __name__ == '__main__':
     )
 
     application.add_handler(start_handler)
-    # application.add_handler(create_room_handler)
-    # application.add_handler(entrance_dialog_handler)
 
     application.run_polling()

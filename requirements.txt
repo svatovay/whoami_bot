@@ -2,6 +2,7 @@ anyio==3.6.1
 APScheduler==3.9.1
 cachetools==5.2.0
 certifi==2022.6.15
+greenlet==1.1.2
 h11==0.12.0
 httpcore==0.15.0
 httpx==0.23.0
@@ -12,6 +13,7 @@ pytz-deprecation-shim==0.1.0.post0
 rfc3986==1.5.0
 six==1.16.0
 sniffio==1.2.0
+SQLAlchemy==1.4.40
 tornado==6.2
 tzdata==2022.1
 tzlocal==4.2
