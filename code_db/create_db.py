@@ -32,6 +32,7 @@ class Roles(Base):
 
     id = Column(Integer, primary_key=True)
     role = Column(String(20))
+    description = Column(String(200))
     roles_comp_id = Column(Integer, ForeignKey('roles_compilations.id'), nullable=False)
 
 

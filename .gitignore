@@ -3,4 +3,6 @@
 
 .idea/
 
-whoami.db
+code_db/whoami.db
+
+code_db/__pycache__/
