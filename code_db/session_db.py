@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 
 def craft_session(func):
-    engine = create_engine(f'sqlite:///whoami.db', echo=True)
+    engine = create_engine(f'sqlite:///code_db/whoami.db', echo=True)
 
     def wrapper(*args, **kwargs):
         with Session(engine) as session:
@@ -15,5 +15,7 @@ def craft_session(func):
                 raise
             else:
                 session.commit()
+            finally:
+                session.close()
         return result
     return wrapper

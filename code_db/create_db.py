@@ -8,7 +8,7 @@ class PlayRoom(Base):
     __tablename__ = 'play_room'
 
     id = Column(Integer, primary_key=True)
-    room_number = Column(Integer, unique=True)
+    room_number = Column(String(4), unique=True)
 
 
 class Player(Base):

@@ -4,6 +4,9 @@ import random
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import filters, ApplicationBuilder, ContextTypes, CommandHandler, ConversationHandler, MessageHandler
 
+from code_db.fill_db import add_room, add_player
+from code_db import selects_db as selects
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -53,26 +56,19 @@ def select_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def create_room(update: Update):
-    def random_number_pick(input_rooms: dict):
+    def random_number_pick():
         random_number = f'{random.randint(0, 10000):04}'
-        if random_number in input_rooms.keys() and input_rooms[random_number]['is_reserved']:
-            return random_number_pick(input_rooms)
+        if selects.select_room(random_number):
+            return random_number_pick()
         else:
             return random_number
 
     markup_key = ReplyKeyboardMarkup([['next']], one_time_keyboard=True)
-    with open("sessions.json", "r") as game_sessions:
-        rooms = json.load(game_sessions)
 
-    room_number = random_number_pick(rooms)
-    rooms[room_number] = {
-        "players_roles": [],
-        "is_reserved": True
-    }
+    room_number = random_number_pick()
+    add_room(room_number)
+
     game_info['room_number'] = room_number
-
-    with open("sessions.json", "w") as game_sessions:
-        json.dump(rooms, game_sessions)
 
     text = f'Ваша комната №{room_number}.\n' \
            f'Другие игроки могут в неё войти.'
@@ -98,14 +94,10 @@ async def player_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def player_role(update: Update, context: ContextTypes.DEFAULT_TYPE):
     game_info['player_name'] = update.message.text
-    game_info['player_role'] = random.choice(characters)
-    with open("sessions.json", "r") as game_sessions:
-        rooms = json.load(game_sessions)
+    game_info['player_role'] = random.choice(selects.select_roles(1)).id
 
-    rooms[game_info['room_number']]['players_roles'].append(f'{game_info["player_name"]} -> {game_info["player_role"]}')
+    add_player(game_info)
 
-    with open("sessions.json", "w") as game_sessions:
-        json.dump(rooms, game_sessions)
     markup_key = ReplyKeyboardMarkup([['view players']], one_time_keyboard=True)
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text="Удачной игры!", reply_markup=markup_key)
@@ -113,9 +105,8 @@ async def player_role(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def players_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    with open("sessions.json", "r") as game_sessions:
-        rooms = json.load(game_sessions)
-    text = f'{rooms[game_info["room_number"]]["players_roles"]}'
+    players = [f"{el.name} -> {selects.select_role(el.role_id)}\n" for el in selects.select_players(game_info['room_number'])]
+    text = players.join()
     await context.bot.send_message(chat_id=update.effective_chat.id, text=text, reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
