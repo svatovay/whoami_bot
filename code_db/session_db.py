@@ -5,11 +5,11 @@ from sqlalchemy.orm import Session
 def craft_session(func):
     engine = create_engine(f'sqlite:///whoami.db', echo=True)
 
-    def wrapper(arg=None):
+    def wrapper(*args, **kwargs):
         with Session(engine) as session:
             session.begin()
             try:
-                result = func(session, arg)
+                result = func(session, *args, **kwargs)
             except:
                 session.rollback()
                 raise

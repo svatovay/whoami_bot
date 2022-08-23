@@ -34,9 +34,9 @@ villians = tuple(characters_films_parser('villians'))
 roles_compilations = ('Актёры и актрисы', 'Персонажи фильмов')
 
 if __name__ == '__main__':
-    engine = create_engine(f'sqlite:///whoami.db', echo=True)
+    engine = create_engine(f'sqlite:///code_db/whoami.db', echo=True)
     with Session(engine) as session:
-        session.add_all(add_roles_compilations(roles_compilations))
+        # session.add_all(add_roles_compilations(roles_compilations))
         session.add_all(add_roles(actors, 1))
         session.add_all(add_roles(actress, 1))
         session.add_all(add_roles(tuple(set(heroes + villians)), 2))

@@ -13,3 +13,4 @@ def select_roles_comp(session, *args, **kwargs):
 def select_roles(session, roles_comp_id, *args, **kwargs):
     stmt = select(Roles).where(Roles.roles_comp_id == roles_comp_id)
     return tuple((el.role, el.description) for el in session.scalars(stmt))
+

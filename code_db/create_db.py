@@ -37,5 +37,5 @@ class Roles(Base):
 
 
 if __name__ == '__main__':
-    engine = create_engine(f'sqlite:///whoami.db', echo=True)
+    engine = create_engine(f'sqlite:///code_db/whoami.db', echo=True)
     Base.metadata.create_all(engine)
