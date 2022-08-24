@@ -85,7 +85,7 @@ async def entrance_room(update: Update):
 
 
 async def player_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not game_info['room_number']:
+    if not game_info['room_number'] and selects.select_room(update.message.text):
         game_info['room_number'] = update.message.text
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text="Введите своё имя")
@@ -105,8 +105,9 @@ async def player_role(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def players_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    players = [f"{el.name} -> {selects.select_role(el.role_id)}\n" for el in selects.select_players(game_info['room_number'])]
-    text = players.join()
+    players = selects.select_players(game_info['room_number'], game_info['player_name'])
+    players_list = [f"{player.name} -> {selects.select_role(player.role_id).role}" for player in players]
+    text = '\n'.join(players_list)
     await context.bot.send_message(chat_id=update.effective_chat.id, text=text, reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
