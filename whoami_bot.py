@@ -86,14 +86,14 @@ async def entrance_room(update: Update):
 
 async def player_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not game_info['room_number'] and selects.select_room(update.message.text):
-        game_info['room_number'] = update.message.text
+        game_info['room_number'] = update.message.text.strip()
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text="Введите своё имя")
     return PLAYER_ROLE
 
 
 async def player_role(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    game_info['player_name'] = update.message.text
+    game_info['player_name'] = update.message.text.strip()
     game_info['player_role'] = random.choice(selects.select_roles(1)).id
 
     add_player(game_info)
